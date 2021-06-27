@@ -53,6 +53,7 @@ class Interscript::Compiler::Javascript < Interscript::Compiler
 
   def compile_rule(r, map = @map, wrapper = false)
     c = ""
+    return c if r.reverse_run == true
     case r
     when Interscript::Node::Stage
       c += "map.stages.#{r.name} = function(s) {\n"
@@ -102,6 +103,8 @@ class Interscript::Compiler::Javascript < Interscript::Compiler
       from = %{"#{build_regexp(r, map).gsub("/", "\\\\/")}"}
       if r.to == :upcase
         to = 'function(a){return a.toUpperCase();}'
+      elsif r.to == :downcase
+        to = 'function(a){return a.toLowerCase();}'
       else
         to = compile_item(r.to, map, :str)
       end

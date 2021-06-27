@@ -76,6 +76,7 @@ class Interscript::Interpreter < Interscript::Compiler
     end
 
     def execute_rule r
+      return if r.reverse_run == true
       case r
       when Interscript::Node::Group::Parallel
         if r.cached_tree
@@ -129,6 +130,8 @@ class Interscript::Interpreter < Interscript::Compiler
       when Interscript::Node::Rule::Sub
         if r.to == :upcase
           @str = @str.gsub(Regexp.new(build_regexp(r)), &:upcase)
+        elsif r.to == :downcase
+          @str = @str.gsub(Regexp.new(build_regexp(r)), &:downcase)
         else
           @str = @str.gsub(Regexp.new(build_regexp(r)), build_item(r.to, :str))
         end

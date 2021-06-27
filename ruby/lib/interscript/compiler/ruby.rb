@@ -42,6 +42,7 @@ class Interscript::Compiler::Ruby < Interscript::Compiler
 
   def compile_rule(r, map = @map, wrapper = false)
     c = ""
+    return c if r.reverse_run == true
     case r
     when Interscript::Node::Stage
       c += "Interscript::Maps.add_map_stage \"#{@map.name}\", #{r.name.inspect} do |s|\n"
@@ -92,6 +93,8 @@ class Interscript::Compiler::Ruby < Interscript::Compiler
       from = "/#{build_regexp(r, map).gsub("/", "\\\\/")}/"
       if r.to == :upcase
         to = '&:upcase'
+      elsif r.to == :downcase
+        to = '&:downcase'
       else
         to = compile_item(r.to, map, :str)
       end
